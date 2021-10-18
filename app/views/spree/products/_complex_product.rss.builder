@@ -9,7 +9,7 @@ unless product.property("g:description").present?
 end
 
 xml.tag!("g:link", spree.product_url(product) + "?variant=" + variant.id.to_s)
-xml.tag!("g:image_link", product_image(variant))
+xml.tag!("g:image_link", product.variant_images.present? ? product.variant_images.first.my_cf_image_url("large") : product.images.first.my_cf_image_url("large"))
 xml.tag!("g:availability", variant.in_stock? ? "in stock" : "out of stock")
 
 if defined?(variant.compare_at_price) && !variant.compare_at_price.nil?
