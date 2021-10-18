@@ -21,7 +21,7 @@ else
   xml.tag!("g:price", product.price_in(current_currency).amount.to_s + " " + current_currency)
 end
 xml.tag!("g:" + product.unique_identifier_type, product.unique_identifier)
-xml.tag!("g:sku", structured_sku(product))
+xml.tag!("g:sku", product.sku)
 
 unless product.product_properties.blank?
   xml << render(partial: "props", locals: {product: product})
