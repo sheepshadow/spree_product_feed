@@ -5,5 +5,6 @@ source "https://rubygems.org"
 gem "spree", "~> 4.2.0"
 gem "spree_auth_devise", "~> 4.2"
 gem "deface"
+gem "libxml-ruby"
 
 gemspec path: "../"
