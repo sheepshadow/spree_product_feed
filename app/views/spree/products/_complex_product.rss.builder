@@ -23,7 +23,7 @@ else
   xml.tag!("g:price", variant.price_in(current_currency).amount.to_s + " " + current_currency)
 end
 
-xml.tag!("g:" + variant.unique_identifier_type, variant.unique_identifier)
+xml.tag!("g:" + variant.unique_identifier_type, product.unique_identifier)
 xml.tag!("g:sku", variant.sku)
 xml.tag!("g:item_group_id", (current_store.id.to_s + "-" + product.id.to_s).downcase)
 xml.tag!("g:product_type", google_product_type(product))
