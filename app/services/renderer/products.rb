@@ -97,7 +97,7 @@ class Renderer::Products
       item << create_node("g:price", variant.price_in(current_currency).amount.to_s + " " + current_currency)
     end
     
-    item << create_node("g:" + variant.unique_identifier_type, variant.unique_identifier)
+    item << create_node("g:" + variant.unique_identifier_type, product.unique_identifier)
     item << create_node("g:sku", variant.sku)
     item << create_node("g:item_group_id", (current_store.id.to_s + "-" + product.id.to_s).downcase)
     item << create_node("g:product_type", google_product_type(product))
