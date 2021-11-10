@@ -105,9 +105,9 @@ class Renderer::Products
     options_xml_hash = Spree::Variants::XmlFeedOptionsPresenter.new(variant).xml_options
     options_xml_hash.each do |ops|
       if ops.option_type[:name] == "color"
-        item << create_node("g:" + ops.option_type.presentation.downcase, ops.name)
+        item << create_node("g:" + ops.option_type.name.downcase.parameterize(separator: '_'), ops.name)
       else
-        item << create_node("g:" + ops.option_type.presentation.downcase, ops.presentation)
+        item << create_node("g:" + ops.option_type.name.downcase.parameterize(separator: '_'), ops.presentation)
       end
     end
     
