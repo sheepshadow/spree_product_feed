@@ -5,7 +5,13 @@ unless product.property("g:title").present?
 end
 
 unless product.property("g:description").present?
-  xml.tag!("g:description", product.meta_description)
+  if product.short_description.present?
+    xml.tag!("g:description", product.short_description)
+  elsif product.description.present?
+    xml.tag!("g:description", product.description)
+  else
+    xml.tag!("g:description", product.meta_description)
+  end
 end
 
 xml.tag!("g:link", spree.product_url(product) + "?variant=" + variant.id.to_s)
