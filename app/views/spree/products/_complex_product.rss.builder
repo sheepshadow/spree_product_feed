@@ -37,10 +37,10 @@ xml.tag!("g:product_type", google_product_type(product))
 options_xml_hash = Spree::Variants::XmlFeedOptionsPresenter.new(variant).xml_options
 options_xml_hash.each_with_index do |ops, index|
   if ops.option_type[:name] == "color"
-    xml.tag!("g:" + ops.option_type.name.downcase.parameterize(separator: '_'), ops.name)
+    xml.tag!("g:" + ops.option_type.presentation.downcase.parameterize(separator: '_'), ops.name)
     xml.tag!("g:custom_label_" + index.to_s, ops.name) unless index > 4
   else
-    xml.tag!("g:" + ops.option_type.name.downcase.parameterize(separator: '_'), ops.presentation)
+    xml.tag!("g:" + ops.option_type.presentation.downcase.parameterize(separator: '_'), ops.presentation)
     xml.tag!("g:custom_label_" + index.to_s, ops.presentation) unless index > 4
   end
 end
