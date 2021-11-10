@@ -46,7 +46,13 @@ class Renderer::Products
       item << create_node("g:title", product.name)
     end
     unless product.property("g:description").present?
-      item << create_node("g:description", product.meta_description)
+      if product.short_description.present?
+        item << create_node("g:description", product.short_description)
+      elsif product.description.present?
+        item << create_node("g:description", product.description)
+      else
+        item << create_node("g:description", product.meta_description)
+      end
     end
     
     item << create_node("g:link", product_url(url_options, product))
@@ -79,7 +85,13 @@ class Renderer::Products
     end
     
     unless product.property("g:description").present?
-      item << create_node("g:description", product.meta_description)
+      if product.short_description.present?
+        item << create_node("g:description", product.short_description)
+      elsif product.description.present?
+        item << create_node("g:description", product.description)
+      else
+        item << create_node("g:description", product.meta_description)
+      end
     end
     
     item << create_node("g:link", product_url(url_options, product) + "?variant=" + variant.id.to_s)
