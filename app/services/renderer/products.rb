@@ -46,7 +46,7 @@ class Renderer::Products
       item << create_node("g:title", product.name)
     end
     unless product.property("g:description").present?
-      if product.short_description.present?
+      if product.respond_to?(:short_description) && product.short_description.present?
         item << create_node("g:description", product.short_description)
       elsif product.description.present?
         item << create_node("g:description", product.description)
@@ -85,7 +85,7 @@ class Renderer::Products
     end
     
     unless product.property("g:description").present?
-      if product.short_description.present?
+      if product.respond_to?(:short_description) && product.short_description.present?
         item << create_node("g:description", product.short_description)
       elsif product.description.present?
         item << create_node("g:description", product.description)

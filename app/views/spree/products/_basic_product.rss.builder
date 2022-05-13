@@ -4,7 +4,7 @@ unless product.property("g:title").present?
   xml.tag!("g:title", product.name)
 end
 unless product.property("g:description").present?
-  if product.short_description.present?
+  if product.respond_to?(:short_description) && product.short_description.present?
     xml.tag!("g:description", product.short_description)
   elsif product.description.present?
     xml.tag!("g:description", product.description)
