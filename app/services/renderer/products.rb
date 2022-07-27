@@ -56,7 +56,14 @@ class Renderer::Products
     end
     
     item << create_node("g:link", product_url(url_options, product))
-    item << create_node("g:image_link", product.images.first.my_cf_image_url("large"))
+
+    if product.images.count > 0
+      img = product.images.first.my_cf_image_url(:large)
+    else
+      img = ActionController::Base.helpers.asset_path('noimage/default-product-image-small.jpg')
+    end
+    item << create_node("g:image_link", img)
+    
     item << create_node("g:availability", product.in_stock? ? "in stock" : "out of stock")
     if defined?(product.compare_at_price) && !product.compare_at_price.nil?
       if product.compare_at_price > product.price
@@ -95,7 +102,16 @@ class Renderer::Products
     end
     
     item << create_node("g:link", product_url(url_options, product) + "?variant=" + variant.id.to_s)
-    item << create_node("g:image_link", product.variant_images.present? ? product.variant_images.first.my_cf_image_url("large") : product.images.first.my_cf_image_url("large"))
+
+    if product.variant_images.count > 0
+      img = product.variant_images.first.my_cf_image_url(:large)
+    elsif product.images.count > 0
+      img = product.images.first.my_cf_image_url(:large)
+    else
+      img = ActionController::Base.helpers.asset_path('noimage/default-product-image-small.jpg')
+    end
+    item << create_node("g:image_link", img)
+    
     item << create_node("g:availability", variant.in_stock? ? "in stock" : "out of stock")
     
     if defined?(variant.compare_at_price) && !variant.compare_at_price.nil?
