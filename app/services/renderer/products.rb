@@ -161,7 +161,7 @@ class Renderer::Products
     end
 
     products = products.except(:limit, :offset)
-    products.each do |product|
+    products.each_with_index do |product, index|
       if product.feed_active?
         if product.variants_and_option_values(current_currency).any?
           product.variants.each do |variant|
@@ -175,6 +175,8 @@ class Renderer::Products
           basic_product(url_options, current_store, current_currency, item, product)
         end
       end
+
+      GC.start if index % 100 == 0 # forcing garbage collection
     end
 
     doc.to_s
