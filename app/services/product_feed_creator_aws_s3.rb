@@ -1,11 +1,12 @@
 class ProductFeedCreatorAwsS3 < ApplicationService
-  FEED_FILE_NAME = "product-feed.csv"
+  FEED_FILE_NAME = "product-feed"
 
-  def initialize(url_options, current_store, current_currency, products)
+  def initialize(url_options, current_store, current_currency, products, index)
     @url_options = url_options
     @current_store = current_store
     @current_currency = current_currency
     @products = products
+    @file_name = "#{FEED_FILE_NAME}-#{index}.csv"
   end
 
   def call()
@@ -17,7 +18,7 @@ class ProductFeedCreatorAwsS3 < ApplicationService
   def generate_feed_file()
     xml = Renderer::Products.xml(@url_options, @current_store, @current_currency, @products)
 
-    file = File.new("./tmp/#{FEED_FILE_NAME}", 'w')
+    file = File.new("./tmp/#{@file_name}", 'w')
     file.sync = true
     file.write(xml)
     file.close
@@ -41,7 +42,7 @@ class ProductFeedCreatorAwsS3 < ApplicationService
 
   def upload_to_s3()
     bucket_name = "#{ENV['S3_PRODUCT_FEED_BUCKET']}"
-    object_key = FEED_FILE_NAME
+    object_key = @file_name
 
     s3_client = Aws::S3::Client.new(
       region:            ENV['S3_PRODUCT_FEED_REGION'],
@@ -49,7 +50,7 @@ class ProductFeedCreatorAwsS3 < ApplicationService
       secret_access_key: ENV['AWS_SECRET_KEY']
     )
     
-    file = File.open("./tmp/#{FEED_FILE_NAME}", 'rb')
+    file = File.open("./tmp/#{@file_name}", 'rb')
 
     if object_uploaded?(s3_client, bucket_name, object_key, file)
       puts "Object '#{object_key}' uploaded to bucket '#{bucket_name}'."
