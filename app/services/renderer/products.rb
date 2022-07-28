@@ -60,9 +60,9 @@ class Renderer::Products
     if product.images.count > 0
       img = product.images.first.my_cf_image_url(:large)
     else
-      img = ActionController::Base.helpers.asset_path('noimage/default-product-image-small.jpg')
+      img = nil
     end
-    item << create_node("g:image_link", img)
+    item << create_node("g:image_link", img) if !img.nil?
     
     item << create_node("g:availability", product.in_stock? ? "in stock" : "out of stock")
     if defined?(product.compare_at_price) && !product.compare_at_price.nil?
@@ -108,9 +108,9 @@ class Renderer::Products
     elsif product.images.count > 0
       img = product.images.first.my_cf_image_url(:large)
     else
-      img = ActionController::Base.helpers.asset_path('noimage/default-product-image-small.jpg')
+      img = nil
     end
-    item << create_node("g:image_link", img)
+    item << create_node("g:image_link", img) if !img.nil?
     
     item << create_node("g:availability", variant.in_stock? ? "in stock" : "out of stock")
     
