@@ -6,7 +6,7 @@ class ProductFeedCreatorAwsS3 < ApplicationService
     @current_store = current_store
     @current_currency = current_currency
     @products = products
-    @file_name = "#{FEED_FILE_NAME}-#{index}.csv"
+    @file_name = "#{FEED_FILE_NAME}-#{index}.xml"
   end
 
   def call()
