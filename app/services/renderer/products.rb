@@ -75,7 +75,7 @@ class Renderer::Products
       item << create_node("g:price", product.price_in(current_currency).amount.to_s + " " + current_currency)
     end
 
-    item << create_node("g:shipping_weight", product.weight + " lb")
+    item << create_node("g:shipping_weight", sprintf("%.2f", product.weight) + " lb")
 
     item << create_node("g:brand", current_store.name)
     item << create_node("g:" + product.unique_identifier_type, product.unique_identifier)
@@ -127,7 +127,7 @@ class Renderer::Products
       item << create_node("g:price", variant.price_in(current_currency).amount.to_s + " " + current_currency)
     end
 
-    item << create_node("g:shipping_weight", variant.weight + " lb")
+    item << create_node("g:shipping_weight", sprintf("%.2f", variant.weight) + " lb")
 
     item << create_node("g:brand", current_store.name)
     item << create_node("g:" + variant.unique_identifier_type, product.unique_identifier)
