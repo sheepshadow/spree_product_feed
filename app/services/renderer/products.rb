@@ -43,8 +43,10 @@ class Renderer::Products
     item << create_node("g:id", current_store.id.to_s + "-" + product.id.to_s)
 
     unless product.property("g:title").present?
-      item << create_node("g:title", product.name)
+      item << create_node("g:title", current_store.name + ' ' + product.name)
     end
+    item << create_node("g:condition", 'new')
+
     unless product.property("g:description").present?
       if product.respond_to?(:short_description) && product.short_description.present?
         item << create_node("g:description", product.short_description)
@@ -57,24 +59,25 @@ class Renderer::Products
     
     item << create_node("g:link", product_url(url_options, product))
 
-    if product.images.count > 0
-      img = product.images.first.my_cf_image_url(:large)
-    else
-      img = nil
+    product.images&.each_with_index do |image, index|
+      if index == 0
+        item << create_node("g:image_link", image.my_cf_image_url(:large))
+      else
+        item << create_node("g:additional_image_link", image.my_cf_image_url(:large))
+      end
     end
-    item << create_node("g:image_link", img) if !img.nil?
     
     item << create_node("g:availability", product.in_stock? ? "in stock" : "out of stock")
-    if defined?(product.compare_at_price) && !product.compare_at_price.nil?
-      if product.compare_at_price > product.price
-        item << create_node("g:price", product.compare_at_price.to_s + " " + current_currency)
-        item << create_node("g:sale_price", product.price_in(current_currency).amount.to_s + " " + current_currency)
-      else
-        item << create_node("g:price", product.price_in(current_currency).amount.to_s + " " + current_currency)
-      end
+    if product.on_sale?
+      item << create_node("g:price", product.original_price_in(current_currency).amount.to_s + " " + current_currency)
+      item << create_node("g:sale_price", product.price_in(current_currency).amount.to_s + " " + current_currency)
     else
       item << create_node("g:price", product.price_in(current_currency).amount.to_s + " " + current_currency)
     end
+
+    item << create_node("g:shipping_weight", product.weight + " lb")
+
+    item << create_node("g:brand", current_store.name)
     item << create_node("g:" + product.unique_identifier_type, product.unique_identifier)
     item << create_node("g:sku", product.sku)
     item << create_node("g:product_type", google_product_type(product))
@@ -85,12 +88,16 @@ class Renderer::Products
   end
 
   def self.complex_product(url_options, current_store, current_currency, item, product, variant)
+    options_xml_hash = Spree::Variants::XmlFeedOptionsPresenter.new(variant).xml_options
+    
     item << create_node("g:id", (current_store.id.to_s + "-" + product.id.to_s + "-" + variant.id.to_s).downcase)
 
     unless product.property("g:title").present?
-      item << create_node("g:title", product.name)
+      item << create_node("g:title", current_store.name + ' ' + product.name + ' ' + options_xml_hash.first.presentation)
     end
-    
+
+    item << create_node("g:condition", 'new')
+
     unless product.property("g:description").present?
       if product.respond_to?(:short_description) && product.short_description.present?
         item << create_node("g:description", product.short_description)
@@ -103,40 +110,39 @@ class Renderer::Products
     
     item << create_node("g:link", product_url(url_options, product) + "?variant=" + variant.id.to_s)
 
-    if product.variant_images.count > 0
-      img = product.variant_images.first.my_cf_image_url(:large)
-    elsif product.images.count > 0
-      img = product.images.first.my_cf_image_url(:large)
-    else
-      img = nil
-    end
-    item << create_node("g:image_link", img) if !img.nil?
-    
-    item << create_node("g:availability", variant.in_stock? ? "in stock" : "out of stock")
-    
-    if defined?(variant.compare_at_price) && !variant.compare_at_price.nil?
-      if variant.compare_at_price > product.price
-        item << create_node("g:price", variant.compare_at_price.to_s + " " + current_currency)
-        item << create_node("g:sale_price", variant.price_in(current_currency).amount.to_s + " " + current_currency)
+    all_images = product.images&.to_a + product.variant_images&.to_a
+    all_images.each_with_index do |image, index|
+      if index == 0
+        item << create_node("g:image_link", image.my_cf_image_url(:large))
       else
-        item << create_node("g:price", variant.price_in(current_currency).amount.to_s + " " + current_currency)
+        item << create_node("g:additional_image_link", image.my_cf_image_url(:large))
       end
+    end
+
+    item << create_node("g:availability", product.in_stock? ? "in stock" : "out of stock")
+    if variant.on_sale?
+      item << create_node("g:price", variant.original_price_in(current_currency).amount.to_s + " " + current_currency)
+      item << create_node("g:sale_price", variant.price_in(current_currency).amount.to_s + " " + current_currency)
     else
       item << create_node("g:price", variant.price_in(current_currency).amount.to_s + " " + current_currency)
     end
-    
+
+    item << create_node("g:shipping_weight", variant.weight + " lb")
+
+    item << create_node("g:brand", current_store.name)
     item << create_node("g:" + variant.unique_identifier_type, product.unique_identifier)
     item << create_node("g:sku", variant.sku)
     item << create_node("g:item_group_id", (current_store.id.to_s + "-" + product.id.to_s).downcase)
     item << create_node("g:product_type", google_product_type(product))
     
-    options_xml_hash = Spree::Variants::XmlFeedOptionsPresenter.new(variant).xml_options
     options_xml_hash.each_with_index do |ops, index|
       if ops.option_type[:name] == "color"
         item << create_node("g:" + ops.option_type.presentation.downcase.parameterize(separator: '_'), ops.name)
         item << create_node("g:custom_label_" + index.to_s, ops.name) unless index > 4
       else
-        item << create_node("g:" + ops.option_type.presentation.downcase.parameterize(separator: '_'), ops.presentation)
+        # item << create_node("g:" + ops.option_type.presentation.downcase.parameterize(separator: '_'), ops.presentation)
+        # Output option type as "size" for Google
+        item << create_node("g:size", ops.presentation)
         item << create_node("g:custom_label_" + index.to_s, ops.presentation) unless index > 4
       end
     end
