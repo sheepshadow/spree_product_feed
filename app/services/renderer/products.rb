@@ -168,7 +168,7 @@ class Renderer::Products
 
     products = products.except(:limit, :offset)
     products.each_with_index do |product, index|
-      if respond_to?(product.is_in_hide_from_nav_taxon?) && product.is_in_hide_from_nav_taxon?
+      if product.is_in_hide_from_nav_taxon?
         next
       elsif product.feed_active?
         if product.variants_and_option_values(current_currency).any?
