@@ -60,11 +60,11 @@ class Renderer::Products
     item << create_node("g:link", product_url(url_options, product))
 
     product.images&.each_with_index do |image, index|
-      if index == 0
-        item << create_node("g:image_link", image.my_cf_image_url(:large))
-      else
-        item << create_node("g:additional_image_link", image.my_cf_image_url(:large))
-      end
+      # if index == 0
+      #   item << create_node("g:image_link", image.my_cf_image_url(:large))
+      # else
+      #   item << create_node("g:additional_image_link", image.my_cf_image_url(:large))
+      # end
     end
     
     item << create_node("g:availability", product.in_stock? ? "in stock" : "out of stock")
@@ -112,11 +112,11 @@ class Renderer::Products
 
     all_images = product.images&.to_a + product.variant_images&.to_a
     all_images.each_with_index do |image, index|
-      if index == 0
-        item << create_node("g:image_link", image.my_cf_image_url(:large))
-      else
-        item << create_node("g:additional_image_link", image.my_cf_image_url(:large))
-      end
+      # if index == 0
+      #   item << create_node("g:image_link", image.my_cf_image_url(:large))
+      # else
+      #   item << create_node("g:additional_image_link", image.my_cf_image_url(:large))
+      # end
     end
 
     item << create_node("g:availability", product.in_stock? ? "in stock" : "out of stock")

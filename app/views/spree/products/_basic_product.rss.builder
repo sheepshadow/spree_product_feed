@@ -14,7 +14,7 @@ unless product.property("g:description").present?
 end
 
 xml.tag!("g:link", spree.product_url(product))
-xml.tag!("g:image_link", product.images.first.my_cf_image_url("large"))
+# xml.tag!("g:image_link", product.images.first.my_cf_image_url("large"))
 xml.tag!("g:availability", product.in_stock? ? "in stock" : "out of stock")
 if defined?(product.compare_at_price) && !product.compare_at_price.nil?
   if product.compare_at_price > product.price
