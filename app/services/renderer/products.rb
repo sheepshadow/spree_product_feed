@@ -80,7 +80,7 @@ class Renderer::Products
     item << create_node("g:brand", current_store.name)
     item << create_node("g:" + product.unique_identifier_type, product.unique_identifier)
     item << create_node("g:sku", product.sku)
-    item << create_node("g:product_type", google_product_type(product))
+    # item << create_node("g:product_type", google_product_type(product))
     
     unless product.product_properties.blank?
       props(item, product)
@@ -133,8 +133,8 @@ class Renderer::Products
     item << create_node("g:" + variant.unique_identifier_type, product.unique_identifier)
     item << create_node("g:sku", variant.sku)
     item << create_node("g:item_group_id", (current_store.id.to_s + "-" + product.id.to_s).downcase)
-    item << create_node("g:product_type", google_product_type(product))
-    
+    # item << create_node("g:product_type", google_product_type(product))
+
     options_xml_hash.each_with_index do |ops, index|
       if ops.option_type[:name] == "color"
         item << create_node("g:" + ops.option_type.presentation.downcase.parameterize(separator: '_'), ops.name)

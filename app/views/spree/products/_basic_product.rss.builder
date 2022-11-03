@@ -28,7 +28,7 @@ else
 end
 xml.tag!("g:" + product.unique_identifier_type, product.unique_identifier)
 xml.tag!("g:sku", product.sku)
-xml.tag!("g:product_type", google_product_type(product))
+# xml.tag!("g:product_type", google_product_type(product))
 
 unless product.product_properties.blank?
   xml << render(partial: "props", locals: {product: product})
