@@ -57,13 +57,8 @@ class Renderer::Products
 
     item << create_node("g:link", product_url(url_options, product))
 
-    product.images&.each_with_index do |image, index|
-      # if index == 0
-      #   item << create_node("g:image_link", image.my_cf_image_url(:large))
-      # else
-      #   item << create_node("g:additional_image_link", image.my_cf_image_url(:large))
-      # end
-    end
+    item << create_node("g:image_link", "https://cdn.img.yes.pl/#{product.sku}/web/#{product.sku}-1.jpg")
+    item << create_node("g:additional_image_link", "https://cdn.img.yes.pl/#{product.sku}/web/#{product.sku}-2.jpg")
 
     item << create_node("g:availability", product.in_stock? ? "in stock" : "out of stock")
     # if product.on_sale?
@@ -108,14 +103,16 @@ class Renderer::Products
 
     item << create_node("g:link", product_url(url_options, product) + "?variant=" + variant.id.to_s)
 
-    all_images = product.images&.to_a + product.variant_images&.to_a
-    all_images.each_with_index do |image, index|
+    item << create_node("g:image_link", "https://cdn.img.yes.pl/#{product.sku}/web/#{product.sku}-1.jpg")
+
+    # all_images = product.images&.to_a + product.variant_images&.to_a
+    # all_images.each_with_index do |image, index|
       # if index == 0
       #   item << create_node("g:image_link", image.my_cf_image_url(:large))
       # else
       #   item << create_node("g:additional_image_link", image.my_cf_image_url(:large))
       # end
-    end
+    # end
 
     item << create_node("g:availability", product.in_stock? ? "in stock" : "out of stock")
     # if variant.on_sale?
