@@ -12,7 +12,7 @@ class ProductFeedCreator < ApplicationService
   def call()
     if @refresh
       Rails.cache.write(
-        CACHED_KEY, 
+        CACHED_KEY,
         Renderer::Products.xml(@url_options, @current_store, @current_currency, @products),
         expires_in: 24.hours
       )

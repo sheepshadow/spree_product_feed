@@ -49,7 +49,7 @@ class ProductFeedCreatorAwsS3 < ApplicationService
       access_key_id:     ENV['AWS_ACCESS_KEY_ID'],
       secret_access_key: ENV['AWS_SECRET_KEY']
     )
-    
+
     file = File.open("./tmp/#{@file_name}", 'rb')
 
     if object_uploaded?(s3_client, bucket_name, object_key, file)
@@ -60,5 +60,4 @@ class ProductFeedCreatorAwsS3 < ApplicationService
 
     file.close()
   end
-
 end

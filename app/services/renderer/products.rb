@@ -3,8 +3,8 @@ require 'libxml'
 class Renderer::Products
   def self.product_url(url_options, product)
     url = url_options[:host]
-    url = url + ":" + url_options[:port].to_s if url_options[:port]
-    url = url + "/products/" + product.slug
+    url = url + ':' + url_options[:port].to_s if url_options[:port]
+    url = url + '/products/' + product.slug
     url
   end
 
@@ -56,7 +56,7 @@ class Renderer::Products
         item << create_node("g:description", product.meta_description)
       end
     end
-    
+
     item << create_node("g:link", product_url(url_options, product))
 
     product.images&.each_with_index do |image, index|
@@ -66,7 +66,7 @@ class Renderer::Products
       #   item << create_node("g:additional_image_link", image.my_cf_image_url(:large))
       # end
     end
-    
+
     item << create_node("g:availability", product.in_stock? ? "in stock" : "out of stock")
     # if product.on_sale?
       # item << create_node("g:price", sprintf("%.2f", product.original_price) + " " + current_currency)
@@ -81,7 +81,7 @@ class Renderer::Products
     item << create_node("g:" + product.unique_identifier_type, product.unique_identifier)
     item << create_node("g:sku", product.sku)
     # item << create_node("g:product_type", google_product_type(product))
-    
+
     unless product.product_properties.blank?
       props(item, product)
     end
@@ -89,7 +89,7 @@ class Renderer::Products
 
   def self.complex_product(url_options, current_store, current_currency, item, product, variant)
     options_xml_hash = Spree::Variants::XmlFeedOptionsPresenter.new(variant).xml_options
-    
+
     item << create_node("g:id", (current_store.id.to_s + "-" + product.id.to_s + "-" + variant.id.to_s).downcase)
 
     unless product.property("g:title").present?
@@ -107,7 +107,7 @@ class Renderer::Products
         item << create_node("g:description", product.meta_description)
       end
     end
-    
+
     item << create_node("g:link", product_url(url_options, product) + "?variant=" + variant.id.to_s)
 
     all_images = product.images&.to_a + product.variant_images&.to_a
@@ -146,10 +146,10 @@ class Renderer::Products
         item << create_node("g:custom_label_" + index.to_s, ops.presentation) unless index > 4
       end
     end
-    
+
     unless product.product_properties.blank?
       props(item, product)
-    end    
+    end
   end
 
   def self.xml(url_options, current_store, current_currency, products)
@@ -159,7 +159,7 @@ class Renderer::Products
     channel << create_node("title", current_store.name)
     channel << create_node("link", current_store.url)
     channel << create_node("description", "Find out about new products first! Always be in the know when new products become available")
-    
+
     if defined?(current_store.default_locale) && !current_store.default_locale.nil?
       channel << create_node("language", current_store.default_locale.downcase)
     else
