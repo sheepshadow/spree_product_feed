@@ -69,7 +69,7 @@ class Renderer::Products
     
     item << create_node("g:availability", product.in_stock? ? "in stock" : "out of stock")
     # if product.on_sale?
-      item << create_node("g:price", sprintf("%.2f", product.original_price) + " " + current_currency)
+      # item << create_node("g:price", sprintf("%.2f", product.original_price) + " " + current_currency)
       item << create_node("g:sale_price", sprintf("%.2f", product.price) + " " + current_currency)
     # else
     #   item << create_node("g:price", sprintf("%.2f", product.original_price) + " " + current_currency)
@@ -121,7 +121,7 @@ class Renderer::Products
 
     item << create_node("g:availability", product.in_stock? ? "in stock" : "out of stock")
     # if variant.on_sale?
-      item << create_node("g:price", sprintf("%.2f", variant.original_price) + " " + current_currency)
+      # item << create_node("g:price", sprintf("%.2f", variant.original_price) + " " + current_currency)
       item << create_node("g:sale_price", sprintf("%.2f", variant.price) + " " + current_currency)
     # else
     #   item << create_node("g:price", sprintf("%.2f", variant.original_price) + " " + current_currency)
