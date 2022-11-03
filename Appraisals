@@ -11,6 +11,12 @@ appraise "spree-4-2" do
   gem "libxml-ruby"
 end
 
+appraise "spree-4-4" do
+  gem "spree", "~> 4.4.0"
+  gem "spree_auth_devise", "~> 4.4"
+  gem "libxml-ruby"
+end
+
 appraise "spree-master" do
   gem "spree", github: "spree/spree", branch: "master"
   gem "spree_auth_devise", github: "spree/spree_auth_devise", branch: "master"
