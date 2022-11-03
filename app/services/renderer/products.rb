@@ -33,9 +33,7 @@ class Renderer::Products
 
   def self.props(item, product)
     product.product_properties.each do |product_property|
-      if product_property.property.presentation.downcase == "product_feed"
-        item << create_node(product_property.property.name.downcase, product_property.value)
-      end
+      item << create_node(product_property.property.name.downcase, product_property.value)
     end
   end
 
